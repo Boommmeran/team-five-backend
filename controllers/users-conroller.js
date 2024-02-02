@@ -12,7 +12,6 @@ import { optimizeImage } from '../Utils/imageOptimizer.js';
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-  const { host } = req.headers;
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
