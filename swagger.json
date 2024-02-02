@@ -7,7 +7,7 @@
   },
   "consumes": ["application/json", "multipart/form-data"],
   "produses": ["application/json"],
-  "serves": [{ "url": "http://localhost:6000/api" }],
+  "servers": [{ "url": "http://localhost:9000/api" }],
   "tags": [
     {
       "name": "Auth",
