@@ -1,0 +1,359 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "TaskPro",
+    "description": "Swagger TaskPro documentation"
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produses": ["application/json"],
+  "servers": [{ "url": "http://localhost:9000/api" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict (email in use)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User authentication",
+        "parameters": [],
+        "requestBody": {
+          "description": "Authentication's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/AuthenticationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "User refresh",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful refresh",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/RefreshResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (Invalid token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Successful logout",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (Invalid token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/avatars": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Update user's avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Avatar's object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#components/schemas/AvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful user's avatar update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/AvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing file)",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (Invalid token)",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Dorian Black"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Qwerty123!"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Dorian Black"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        }
+      },
+      "AuthenticationRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Qwerty123!"
+          }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "65bcb42787fb215c278936ba"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Dorian"
+              },
+              "password": {
+                "type": "string",
+                "description": "User's hash password",
+                "example": "$2b$10$XC8oVm8V8fnT4zIjFusuUuK86lsKQN80a9S/ME4aqiWnt1Ih5aGMe"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "token": {
+                "type": "string",
+                "description": "User's token",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar url",
+                "example": "avatars/65bcb42787fb215c278936ba"
+              },
+              "createdAt": {
+                "type": "string",
+                "description": "User's document created date",
+                "example": "2024-02-02T09:21:43.425Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "description": "User's document updated date",
+                "example": "2024-02-02T09:21:43.425Z"
+              }
+            }
+          }
+        }
+      },
+      "RefreshResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "65bcb42787fb215c278936ba"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Dorian"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's hash password",
+            "example": "$2b$10$XC8oVm8V8fnT4zIjFusuUuK86lsKQN80a9S/ME4aqiWnt1Ih5aGMe"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar url",
+            "example": "avatars/65bcb42787fb215c278936ba"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "User's document created date",
+            "example": "2024-02-02T09:21:43.425Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "User's document updated date",
+            "example": "2024-02-02T09:21:43.425Z"
+          }
+        }
+      },
+      "AvatarRequest": {
+        "type": "object",
+        "required": ["avatar"],
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "AvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar url",
+            "example": "avatars/65bcb42787fb215c278936ba"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
