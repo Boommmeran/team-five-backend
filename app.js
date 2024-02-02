@@ -3,6 +3,9 @@ import logger from 'morgan';
 import cors from 'cors';
 import 'dotenv/config';
 import usersRouter from './routes/api/users.js';
+import boardsRouter from './routes/api/boards-router.js';
+import columnsRouter from './routes/api/columns-router.js';
+import cardsRouter from './routes/api/cards-router.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json' assert { type: 'json' };
 
@@ -20,6 +23,9 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.use('/api/users', usersRouter);
+app.use('/api/boards', boardsRouter);
+app.use('/api/columns', columnsRouter);
+app.use('/api/cards', cardsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
