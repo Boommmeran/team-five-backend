@@ -8,6 +8,7 @@ import columnsRouter from './routes/api/columns-router.js';
 import cardsRouter from './routes/api/cards-router.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json' assert { type: 'json' };
+import emailRouter from './routes/api/emailRouter.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/boards', boardsRouter);
 app.use('/api/columns', columnsRouter);
 app.use('/api/cards', cardsRouter);
+app.use('/api/email', emailRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
