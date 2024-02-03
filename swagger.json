@@ -7,7 +7,10 @@
   },
   "consumes": ["application/json", "multipart/form-data"],
   "produses": ["application/json"],
-  "servers": [{ "url": "http://localhost:9000/api" }],
+  "servers": [
+    { "url": "http://localhost:9000/api" },
+    { "url": "http://render.com/api" }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -167,6 +170,45 @@
           },
           "401": {
             "description": "Unauthorized (Invalid token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User update",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token",
             "content": {}
           }
         }
@@ -344,6 +386,22 @@
             "type": "string",
             "description": "User's avatar url",
             "example": "avatars/65bcb42787fb215c278936ba"
+          }
+        }
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Qwerty123!"
           }
         }
       }
