@@ -92,9 +92,26 @@ const updateAvatar = async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   const { contactId } = req.params;
 
-  const updateUser = await User.findByIdAndUpdate({ _id: contactId }, req.body, {
-    new: true,
-  });
+  const updateUser = await User.findByIdAndUpdate(
+    { _id: contactId },
+    req.body,
+    {
+      new: true,
+    }
+  );
+  res.json(updateUser);
+};
+
+const updateTheme = async (req, res, next) => {
+  const { _id } = req.user;
+  const { theme } = req.body;
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    { theme },
+    {
+      new: true,
+    }
+  );
   res.json(updateUser);
 };
 
@@ -105,4 +122,5 @@ export default {
   logout: ctrlWrapper(logout),
   updateAvatar: ctrlWrapper(updateAvatar),
   updateProfile: ctrlWrapper(updateProfile),
+  updateTheme: ctrlWrapper(updateTheme),
 };

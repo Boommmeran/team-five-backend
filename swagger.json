@@ -230,7 +230,45 @@
         }
       }
     },
-
+    "/users/theme": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "User update theme",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update theme",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateThemeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful update theme",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/RefreshResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {}
+          }
+        }
+      }
+    },
     "/email/support": {
       "post": {
         "tags": ["SendEmail"],
@@ -1220,212 +1258,233 @@
     }
   },
   "components": {
-      "schemas": {
-        "RegistrationRequest": {
-          "type": "object",
-          "required": ["name", "email", "password"],
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "User's name",
-              "example": "Dorian Black"
-            },
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "password": {
-              "type": "string",
-              "description": "User's password",
-              "example": "Qwerty123!"
-            }
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Dorian Black"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Qwerty123!"
           }
-        },
-        "RegistrationResponse": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "User's name",
-              "example": "Dorian Black"
-            },
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Dorian Black"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           }
-        },
-        "AuthenticationRequest": {
-          "type": "object",
-          "required": ["email", "password"],
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "password": {
-              "type": "string",
-              "description": "User's password",
-              "example": "Qwerty123!"
-            }
+        }
+      },
+      "AuthenticationRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Qwerty123!"
           }
-        },
-        "AuthenticationResponse": {
-          "type": "object",
-          "properties": {
-            "token": {
-              "type": "string",
-              "description": "User's token",
-              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
-            },
-            "user": {
-              "type": "object",
-              "properties": {
-                "_id": {
-                  "type": "string",
-                  "description": "User's id",
-                  "example": "65bcb42787fb215c278936ba"
-                },
-                "name": {
-                  "type": "string",
-                  "description": "User's name",
-                  "example": "Dorian"
-                },
-                "password": {
-                  "type": "string",
-                  "description": "User's hash password",
-                  "example": "$2b$10$XC8oVm8V8fnT4zIjFusuUuK86lsKQN80a9S/ME4aqiWnt1Ih5aGMe"
-                },
-                "email": {
-                  "type": "string",
-                  "description": "User's email",
-                  "format": "email"
-                },
-                "token": {
-                  "type": "string",
-                  "description": "User's token",
-                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
-                },
-                "avatarURL": {
-                  "type": "string",
-                  "description": "User's avatar url",
-                  "example": "avatars/65bcb42787fb215c278936ba"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "User's document created date",
-                  "example": "2024-02-02T09:21:43.425Z"
-                },
-                "updatedAt": {
-                  "type": "string",
-                  "description": "User's document updated date",
-                  "example": "2024-02-02T09:21:43.425Z"
-                }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "65bcb42787fb215c278936ba"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Dorian"
+              },
+              "password": {
+                "type": "string",
+                "description": "User's hash password",
+                "example": "$2b$10$XC8oVm8V8fnT4zIjFusuUuK86lsKQN80a9S/ME4aqiWnt1Ih5aGMe"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "token": {
+                "type": "string",
+                "description": "User's token",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
+              },
+              "theme": {
+                "type": "string",
+                "description": "User's theme",
+                "example": "light"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar url",
+                "example": "avatars/65bcb42787fb215c278936ba"
+              },
+              "createdAt": {
+                "type": "string",
+                "description": "User's document created date",
+                "example": "2024-02-02T09:21:43.425Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "description": "User's document updated date",
+                "example": "2024-02-02T09:21:43.425Z"
               }
             }
           }
-        },
-        "RefreshResponse": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "description": "User's id",
-              "example": "65bcb42787fb215c278936ba"
-            },
-            "name": {
-              "type": "string",
-              "description": "User's name",
-              "example": "Dorian"
-            },
-            "password": {
-              "type": "string",
-              "description": "User's hash password",
-              "example": "$2b$10$XC8oVm8V8fnT4zIjFusuUuK86lsKQN80a9S/ME4aqiWnt1Ih5aGMe"
-            },
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "token": {
-              "type": "string",
-              "description": "User's token",
-              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
-            },
-            "avatarURL": {
-              "type": "string",
-              "description": "User's avatar url",
-              "example": "avatars/65bcb42787fb215c278936ba"
-            },
-            "createdAt": {
-              "type": "string",
-              "description": "User's document created date",
-              "example": "2024-02-02T09:21:43.425Z"
-            },
-            "updatedAt": {
-              "type": "string",
-              "description": "User's document updated date",
-              "example": "2024-02-02T09:21:43.425Z"
-            }
+        }
+      },
+      "RefreshResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "65bcb42787fb215c278936ba"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Dorian"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's hash password",
+            "example": "$2b$10$XC8oVm8V8fnT4zIjFusuUuK86lsKQN80a9S/ME4aqiWnt1Ih5aGMe"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNiNDI3ODdmYjIxNWMyNzg5MzZiYSIsImlhdCI6MTcwNjg2ODYzNywiZXhwIjoxNzA2OTUxNDM3fQ.QZtLQMkuSmE6f1oUgTR_qjCavsa_eYYDnsCh7orAYQw"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar url",
+            "example": "avatars/65bcb42787fb215c278936ba"
+          },
+          "theme": {
+            "type": "string",
+            "description": "User's theme",
+            "example": "light"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "User's document created date",
+            "example": "2024-02-02T09:21:43.425Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "User's document updated date",
+            "example": "2024-02-02T09:21:43.425Z"
           }
-        },
-        "AvatarRequest": {
-          "type": "object",
-          "required": ["avatar"],
-          "properties": {
-            "avatar": {
-              "type": "string",
-              "format": "binary"
-            }
+        }
+      },
+      "AvatarRequest": {
+        "type": "object",
+        "required": ["avatar"],
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "format": "binary"
           }
-        },
-        "AvatarResponse": {
-          "type": "object",
-          "properties": {
-            "avatarURL": {
-              "type": "string",
-              "description": "User's avatar url",
-              "example": "avatars/65bcb42787fb215c278936ba"
-            }
+        }
+      },
+      "AvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar url",
+            "example": "avatars/65bcb42787fb215c278936ba"
           }
-        },
-        "UpdateRequest": {
-          "type": "object",
-          "required": ["email", "password"],
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "password": {
-              "type": "string",
-              "description": "User's password",
-              "example": "Qwerty123!"
-            }
+        }
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Qwerty123!"
           }
-        },
-        "SendEmailRequest": {
-          "type": "object",
-          "required": ["emailForSupport", "textMessage"],
-          "properties": {
-            "emailForSupport": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "textMessage": {
-              "type": "string",
-              "description": "User's message",
-              "example": "I need help"
-            }
+        }
+      },
+      "UpdateThemeRequest": {
+        "type": "object",
+        "required": ["theme"],
+        "properties": {
+          "theme": {
+            "type": "string",
+            "description": "User's theme",
+            "example": "light"
           }
-        },
-        "AddNewBoardRequest": {
+        }
+      },
+      "SendEmailRequest": {
+        "type": "object",
+        "required": ["emailForSupport", "textMessage"],
+        "properties": {
+          "emailForSupport": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "textMessage": {
+            "type": "string",
+            "description": "User's message",
+            "example": "I need help"
+          }
+        }
+      },
+      "AddNewBoardRequest": {
         "type": "object",
         "required": ["title", "icon", "background"],
         "properties": {
@@ -1459,8 +1518,8 @@
             "type": "string"
           }
         }
-        },
-        "UpdateBoardRequest": {
+      },
+      "UpdateBoardRequest": {
         "type": "object",
         "required": ["title", "icon"],
         "properties": {
@@ -1473,8 +1532,8 @@
             "example": "icon.png"
           }
         }
-        },
-        "UpdateBoardResponse": {
+      },
+      "UpdateBoardResponse": {
         "type": "object",
         "required": ["title"],
         "properties": {
@@ -1520,8 +1579,8 @@
             "example": "owner_ID"
           }
         }
-        },
-        "GetAllBoardsResponse": {
+      },
+      "GetAllBoardsResponse": {
         "type": "array",
         "items": {
           "type": "object",
@@ -1552,8 +1611,8 @@
             "owner": "owner_id"
           }
         ]
-        },
-        "GetBoardByIDResponse": {
+      },
+      "GetBoardByIDResponse": {
         "type": "object",
         "properties": {
           "background": {
@@ -1622,8 +1681,8 @@
             "example": "2024-02-05T14:54:59.250+00:00"
           }
         }
-        },
-        "AddNewColumnRequest": {
+      },
+      "AddNewColumnRequest": {
         "type": "object",
         "required": ["title"],
         "properties": {
@@ -1632,8 +1691,8 @@
             "example": "column name"
           }
         }
-        },
-        "AddNewColumnResponse": {
+      },
+      "AddNewColumnResponse": {
         "type": "object",
         "required": ["title"],
         "properties": {
@@ -1705,8 +1764,8 @@
             }
           }
         }
-        },
-        "GetColumnsByBoardIDResponse": {
+      },
+      "GetColumnsByBoardIDResponse": {
         "type": "array",
         "items": {
           "type": "object",
@@ -1737,8 +1796,8 @@
             "owner": "borad_id"
           }
         ]
-        },
-        "UpdateColumnRequest": {
+      },
+      "UpdateColumnRequest": {
         "type": "object",
         "required": ["title", "owner", "_id"],
         "properties": {
@@ -1755,8 +1814,8 @@
             "example": "column_id"
           }
         }
-        },
-        "UpdateColumnResponse": {
+      },
+      "UpdateColumnResponse": {
         "type": "object",
         "properties": {
           "title": {
@@ -1778,8 +1837,8 @@
           "_id": "Column's_ID",
           "cards": []
         }
-        },
-        "DeleteColumnRequest": {
+      },
+      "DeleteColumnRequest": {
         "type": "object",
         "required": ["title"],
         "properties": {
@@ -1792,8 +1851,8 @@
             "example": "Current column_Id"
           }
         }
-        },
-        "AddNewCardRequest": {
+      },
+      "AddNewCardRequest": {
         "type": "object",
         "required": ["title", "text", "deadline", "owner", "priority"],
         "properties": {
@@ -1818,8 +1877,8 @@
             "example": "high"
           }
         }
-        },
-        "AddNewCardResponse": {
+      },
+      "AddNewCardResponse": {
         "type": "object",
         "properties": {
           "title": {
@@ -1851,8 +1910,8 @@
           "owner": "Column's_ID",
           "_id": "Card_ID"
         }
-        },
-        "CardUpdateRequest": {
+      },
+      "CardUpdateRequest": {
         "type": "object",
         "required": ["_id", "owner"],
         "properties": {
@@ -1881,8 +1940,8 @@
             "example": "new_dedline"
           }
         }
-        },
-        "CardUpdateResponse": {
+      },
+      "CardUpdateResponse": {
         "type": "object",
         "properties": {
           "_id": {
@@ -1918,8 +1977,8 @@
           "owner": "column's_ID",
           "_id": "card's_ID"
         }
-        },
-        "CardReplaceRequest": {
+      },
+      "CardReplaceRequest": {
         "type": "object",
         "required": ["_id", "owner", "newOwner"],
         "properties": {
@@ -1936,8 +1995,8 @@
             "example": "new_column_ID"
           }
         }
-        },
-        "CardReplaceResponse": {
+      },
+      "CardReplaceResponse": {
         "type": "object",
         "properties": {
           "title": {
@@ -1973,8 +2032,8 @@
           "owner": "65bcfd43de758e318f8a5a03",
           "_id": "65bf89ab7ec5d2d1fa3fe1a0"
         }
-        },
-        "DeleteCardRequest": {
+      },
+      "DeleteCardRequest": {
         "type": "object",
         "required": ["_id", "owner"],
         "properties": {
@@ -1987,14 +2046,14 @@
             "example": "column_ID"
           }
         }
-        },
-        "DeleteCardResponse": {
+      },
+      "DeleteCardResponse": {
         "typ": "object",
         "example": {
           "message": "card deleted successfully"
         }
-        },
-        "UnauthorizedResponse": {
+      },
+      "UnauthorizedResponse": {
         "type": "object",
         "properties": {
           "message": {
@@ -2005,8 +2064,8 @@
         "example": {
           "message": "unauthorized"
         }
-        },
-        "OtherResponse": {
+      },
+      "OtherResponse": {
         "type": "object",
         "properties": {
           "message": {
@@ -2017,14 +2076,14 @@
         "example": {
           "message": "some message"
         }
-        }
-      },
-      "securitySchemes": {
-        "Bearer": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
+  }
 }
