@@ -3,12 +3,10 @@ import validateBody from '../../decorators/validateBody.js';
 import {
   authenticate,
   isEmptyBody,
-  isValidId,
 } from '../../middlewares/index.js';
 import {
   userLoginScheme,
   userRegisterScheme,
-  profileUpdateScheme,
   updateThemeScheme,
 } from '../../models/user.js';
 import usersController from '../../controllers/users-conroller.js';
@@ -42,11 +40,10 @@ usersRouter.patch(
 );
 
 usersRouter.patch(
-  '/:contactId/update-profile',
+  '/update',
   authenticate,
-  isValidId,
   isEmptyBody(),
-  validateBody(profileUpdateScheme),
+  validateBody(userRegisterScheme),
   usersController.updateProfile
 );
 
