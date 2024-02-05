@@ -191,7 +191,7 @@
         }
       }
     },
-    "/users/update": {
+    "/users/:contactId/update": {
       "post": {
         "tags": ["Auth"],
         "summary": "User update",

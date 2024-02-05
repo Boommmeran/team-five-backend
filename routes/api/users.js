@@ -8,7 +8,6 @@ import {
 import {
   userLoginScheme,
   userRegisterScheme,
-  profileUpdateScheme,
   updateThemeScheme,
 } from '../../models/user.js';
 import usersController from '../../controllers/users-conroller.js';
@@ -46,7 +45,7 @@ usersRouter.patch(
   authenticate,
   isValidId,
   isEmptyBody(),
-  validateBody(profileUpdateScheme),
+  validateBody(userRegisterScheme),
   usersController.updateProfile
 );
 

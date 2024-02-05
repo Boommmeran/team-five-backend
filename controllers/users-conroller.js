@@ -91,6 +91,10 @@ const updateAvatar = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
   const { contactId } = req.params;
+  if (req.body.password) {
+    const hashPassword = await bcrypt.hash(req.body.password, 10);
+    req.body.password = hashPassword;
+  }
 
   const updateUser = await User.findByIdAndUpdate(
     { _id: contactId },
@@ -99,6 +103,7 @@ const updateProfile = async (req, res, next) => {
       new: true,
     }
   );
+
   res.json(updateUser);
 };
 
