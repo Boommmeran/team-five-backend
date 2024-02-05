@@ -2,6 +2,8 @@ import { Schema, model } from 'mongoose';
 import { handleMongooseError } from '../helpers/index.js';
 import Joi from 'joi';
 
+const themesList = ['light', 'dark', 'violet'];
+
 const user = new Schema(
   {
     name: {
@@ -24,6 +26,11 @@ const user = new Schema(
     avatarURL: {
       type: String,
       default: null,
+    },
+    theme: {
+      type: String,
+      default: 'light',
+      enum: themesList,
     },
   },
   { versionKey: false, timestamps: true }
@@ -70,6 +77,10 @@ export const profileUpdateScheme = Joi.object({
   name: Joi.string(),
   email: Joi.string().email(),
   password: Joi.string(),
+});
+
+export const updateThemeScheme = Joi.object({
+  theme: Joi.string().valid(...themesList),
 });
 
 export const User = model('user', user);

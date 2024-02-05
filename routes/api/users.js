@@ -9,6 +9,7 @@ import {
   userLoginScheme,
   userRegisterScheme,
   profileUpdateScheme,
+  updateThemeScheme,
 } from '../../models/user.js';
 import usersController from '../../controllers/users-conroller.js';
 import upload from '../../middlewares/upload.js';
@@ -47,6 +48,14 @@ usersRouter.patch(
   isEmptyBody(),
   validateBody(profileUpdateScheme),
   usersController.updateProfile
+);
+
+usersRouter.patch(
+  '/theme',
+  authenticate,
+  isEmptyBody(),
+  validateBody(updateThemeScheme),
+  usersController.updateTheme
 );
 
 export default usersRouter;
