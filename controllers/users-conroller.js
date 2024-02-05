@@ -89,10 +89,20 @@ const updateAvatar = async (req, res, next) => {
   res.json({ avatarURL });
 };
 
+const updateProfile = async (req, res, next) => {
+  const { contactId } = req.params;
+
+  const updateUser = await User.findByIdAndUpdate({ _id: contactId }, req.body, {
+    new: true,
+  });
+  res.json(updateUser);
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   current: ctrlWrapper(current),
   logout: ctrlWrapper(logout),
   updateAvatar: ctrlWrapper(updateAvatar),
+  updateProfile: ctrlWrapper(updateProfile),
 };
