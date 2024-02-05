@@ -1,7 +1,15 @@
 import express from 'express';
 import validateBody from '../../decorators/validateBody.js';
-import { authenticate, isEmptyBody } from '../../middlewares/index.js';
-import { userLoginScheme, userRegisterScheme } from '../../models/user.js';
+import {
+  authenticate,
+  isEmptyBody,
+  isValidId,
+} from '../../middlewares/index.js';
+import {
+  userLoginScheme,
+  userRegisterScheme,
+  profileUpdateScheme,
+} from '../../models/user.js';
 import usersController from '../../controllers/users-conroller.js';
 import upload from '../../middlewares/upload.js';
 
@@ -30,6 +38,15 @@ usersRouter.patch(
   authenticate,
   upload.single('avatar'),
   usersController.updateAvatar
+);
+
+usersRouter.patch(
+  '/:contactId/update-profile',
+  authenticate,
+  isValidId,
+  isEmptyBody(),
+  validateBody(profileUpdateScheme),
+  usersController.updateProfile
 );
 
 export default usersRouter;
