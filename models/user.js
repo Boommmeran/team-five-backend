@@ -66,4 +66,10 @@ export const userLoginScheme = Joi.object({
   }),
 });
 
+export const profileUpdateScheme = Joi.object({
+  name: Joi.string(),
+  email: Joi.string().email(),
+  password: Joi.string(),
+});
+
 export const User = model('user', user);
