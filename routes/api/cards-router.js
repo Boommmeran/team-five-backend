@@ -4,9 +4,7 @@ import cardsController from "../../controllers/cards-controller.js";
 
 import { validateBody } from "../../decorators/index.js";
 
-import { authenticate, isEmptyBody } from "../../middlewares/index.js";
-
-import { isValidIdbyKey } from "../../middlewares/isValidId.js";
+import { authenticate, isEmptyBody, isValidIdbyKey } from "../../middlewares/index.js";
 
 import { addCardSchema } from "../../models/board.js";
 
