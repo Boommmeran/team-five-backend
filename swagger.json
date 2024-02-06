@@ -31,6 +31,10 @@
     {
       "name": "Cards",
       "description": "Cards endpoints"
+    },
+    {
+      "name": "Pictures",
+      "description": "Pictures endpoints"
     }
   ],
   "paths": {
@@ -1259,6 +1263,41 @@
           }
         }
       }
+    },
+    "/pictures": {
+      "post": {
+        "tags": ["Pictures"],
+        "summary": "Add picture to cloudinary",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Pictures object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#components/schemas/PicturesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful added picture",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/PicturesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing file or title)",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1442,6 +1481,30 @@
             "type": "string",
             "description": "User's avatar url",
             "example": "avatars/65bcb42787fb215c278936ba"
+          }
+        }
+      },
+      "PicturesRequest": {
+        "type": "object",
+        "required": ["title", "picture"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Picture title"
+          },
+          "picture": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "PicturesResponse": {
+        "type": "object",
+        "properties": {
+          "pictureURL": {
+            "type": "string",
+            "description": "Pictures url",
+            "example": "pictures/title"
           }
         }
       },
