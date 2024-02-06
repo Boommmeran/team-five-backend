@@ -122,7 +122,7 @@ const deleteBoard = async (req, res) => {
   const { _id: owner } = req.user;
   const { boardId: _id } = req.params;
 
-  const result = await Board.findOneAndRemove({
+  const result = await Board.findOneAndDelete({
     _id,
     owner
   });
