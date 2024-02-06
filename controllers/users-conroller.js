@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
 import 'dotenv/config';
-import { nanoid } from 'nanoid';
 import { uploadImage } from '../Utils/cloudinaryUpload.js';
 import { optimizeImage } from '../Utils/imageOptimizer.js';
 
@@ -18,18 +17,21 @@ const register = async (req, res) => {
     throw HttpError(409, 'Email in use');
   }
   const hashPassword = await bcrypt.hash(password, 10);
-  const verificationToken = nanoid();
-  const newUser = await User.create({
+  const newUser = new User({
     ...req.body,
     password: hashPassword,
-    verificationToken,
   });
 
+  const payload = { id: newUser._id };
+  const token = jwt.sign(payload, SECRET_KEY, {
+    expiresIn: '23h',
+  });
+  newUser.token = token;
+  await newUser.save();
+
   res.status(201).json({
-    user: {
-      name: newUser.name,
-      email: newUser.email,
-    },
+    token,
+    user: newUser,
   });
 };
 
@@ -90,18 +92,16 @@ const updateAvatar = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-   const { _id } = req.user;
-  const { name, email, password } = req.body;
-  
-    const hashPassword = await bcrypt.hash(password, 10);
-    
-  
+  const { contactId } = req.params;
 
-  await User.findByIdAndUpdate(_id,
-    {name, email, password:hashPassword,},
-    {new: true,}
+  const updateUser = await User.findByIdAndUpdate(
+    { _id: contactId },
+    req.body,
+    {
+      new: true,
+    }
   );
-  res.json({name, email});
+  res.json(updateUser);
 };
 
 const updateTheme = async (req, res, next) => {
