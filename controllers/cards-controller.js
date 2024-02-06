@@ -34,7 +34,7 @@ const addCard = async (req, res) => {
     }
   );
 
-  const boardGetCard = await Board.findOne({ _id: boardId, ovner: _id });
+  const boardGetCard = await Board.findOne({ _id: boardId, owner: _id });
   const result = boardGetCard.columns
     .find((column) => column.id === owner)
     .cards.find((card) => card._id.toString() === newObjectId.toString());
