@@ -90,16 +90,18 @@ const updateAvatar = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-  const { contactId } = req.params;
+   const { _id } = req.user;
+  const { name, email, password } = req.body;
+  
+    const hashPassword = await bcrypt.hash(password, 10);
+    
+  
 
-  const updateUser = await User.findByIdAndUpdate(
-    { _id: contactId },
-    req.body,
-    {
-      new: true,
-    }
+  await User.findByIdAndUpdate(_id,
+    {name, email, password:hashPassword,},
+    {new: true,}
   );
-  res.json(updateUser);
+  res.json({name, email});
 };
 
 const updateTheme = async (req, res, next) => {
