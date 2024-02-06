@@ -269,7 +269,7 @@
         }
       }
     },
-    "/email/support": {
+    "/support": {
       "post": {
         "tags": ["SendEmail"],
         "summary": "Send email to support",
@@ -287,8 +287,12 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Sent successfully",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (Invalid token)",
             "content": {}
           },
           "400": {
