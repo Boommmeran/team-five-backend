@@ -14,7 +14,7 @@ columnsRouter.get("/:boardId", authenticate, isValidIdbyKey("boardId"), columnsC
 
 columnsRouter.post("/:boardId", authenticate, isValidIdbyKey("boardId"), isEmptyBody(), validateBody(addColumnSchema), columnsController.addColumnInBoard);
 
-columnsRouter.put("/", authenticate, isEmptyBody(), columnsController.updateColumn);
+columnsRouter.put("/", authenticate, isEmptyBody(), validateBody(addColumnSchema), columnsController.updateColumn);
 
 columnsRouter.delete("/", authenticate, columnsController.deleteColumn);
 
