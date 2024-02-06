@@ -7,7 +7,7 @@ import { sendEmailSchema } from '../../schemas/email.js';
 const emailRouter = express.Router();
 
 emailRouter.post(
-  '/support',
+  '/',
   //   authenticate,
   //   isEmptyBody,
   validateBody(sendEmailSchema),

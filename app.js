@@ -27,7 +27,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/boards', boardsRouter);
 app.use('/api/columns', columnsRouter);
 app.use('/api/cards', cardsRouter);
-app.use('/api/email', emailRouter);
+app.use('/api/support', emailRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
