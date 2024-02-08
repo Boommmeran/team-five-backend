@@ -192,7 +192,7 @@
       }
     },
     "/users/update": {
-      "post": {
+      "patch": {
         "tags": ["Auth"],
         "summary": "User update",
         "parameters": [],
