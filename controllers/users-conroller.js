@@ -92,11 +92,15 @@ const updateAvatar = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-  const { _id } = req.params;
-  const updateUser = await User.findByIdAndUpdate(_id, req.body, {
-    new: true,
-  });
-  res.json(updateUser);
+   const { _id } = req.user;
+  const { name, email, password } = req.body;
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  await User.findByIdAndUpdate(_id,
+    {name, email, password:hashPassword,},
+    {new: true,}
+  );
+  res.json({name, email});
 };
 
 const updateTheme = async (req, res, next) => {
