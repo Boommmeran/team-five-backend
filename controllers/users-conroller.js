@@ -92,15 +92,10 @@ const updateAvatar = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-  const { contactId } = req.params;
-
-  const updateUser = await User.findByIdAndUpdate(
-    { _id: contactId },
-    req.body,
-    {
-      new: true,
-    }
-  );
+  const { _id } = req.params;
+  const updateUser = await User.findByIdAndUpdate(_id, req.body, {
+    new: true,
+  });
   res.json(updateUser);
 };
 
