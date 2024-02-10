@@ -7,6 +7,7 @@ import fs from 'fs/promises';
 import 'dotenv/config';
 import { uploadImage } from '../Utils/cloudinaryUpload.js';
 import { optimizeImage } from '../Utils/imageOptimizer.js';
+import { nanoid } from 'nanoid';
 
 const { SECRET_KEY } = process.env;
 
@@ -73,9 +74,9 @@ const updateAvatar = async (req, res, next) => {
   if (!req.file) {
     throw HttpError(400, 'missing file');
   }
-
+  const randomName = nanoid();
   const { path: tempUpload } = req.file; //шлях до файлу
-  const optimizedFilePath = `tmp/${_id}.webp`; // новий оптимізований шлях
+  const optimizedFilePath = `tmp/${randomName}.webp`; // новий оптимізований шлях
 
   const options = {
     input: tempUpload,
@@ -83,7 +84,7 @@ const updateAvatar = async (req, res, next) => {
   };
 
   await optimizeImage(options); // оптимізація
-  const avatarURL = await uploadImage(optimizedFilePath, _id, 'avatars'); // завантажуємо оптимізований файл на клоудінарі
+  const avatarURL = await uploadImage(optimizedFilePath, randomName, 'avatars'); // завантажуємо оптимізований файл на клоудінарі
   await fs.unlink(tempUpload); // видаляємо тимчасовий оригінальний файл
   await fs.unlink(optimizedFilePath); // видаляємо тимчасовий оптимізований файл
   await User.findByIdAndUpdate(_id, { avatarURL }); // обновляємо базу данних юзера
@@ -92,15 +93,16 @@ const updateAvatar = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-   const { _id } = req.user;
+  const { _id } = req.user;
   const { name, email, password } = req.body;
 
   const hashPassword = await bcrypt.hash(password, 10);
-  await User.findByIdAndUpdate(_id,
-    {name, email, password:hashPassword,},
-    {new: true,}
+  await User.findByIdAndUpdate(
+    _id,
+    { name, email, password: hashPassword },
+    { new: true }
   );
-  res.json({name, email});
+  res.json({ name, email });
 };
 
 const updateTheme = async (req, res, next) => {
