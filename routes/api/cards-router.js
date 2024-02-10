@@ -1,21 +1,53 @@
-import express from "express";
-
-import cardsController from "../../controllers/cards-controller.js";
-
-import { validateBody } from "../../decorators/index.js";
-
-import { authenticate, isEmptyBody, isValidIdbyKey } from "../../middlewares/index.js";
-
-import { addCardSchema } from "../../models/board.js";
+import express from 'express';
+import cardsController from '../../controllers/cards-controller.js';
+import { validateBody } from '../../decorators/index.js';
+import {
+  authenticate,
+  isEmptyBody,
+  isValidIdbyKey,
+} from '../../middlewares/index.js';
+import { addCardSchema, updateCardSchema } from '../../models/card.js';
 
 const cardsRouter = express.Router();
 
-cardsRouter.post("/:boardId", authenticate, isValidIdbyKey("boardId"), isEmptyBody(), validateBody(addCardSchema), cardsController.addCard);
+cardsRouter.get(
+  '/:boardId',
+  authenticate,
+  isValidIdbyKey('boardId'),
+  cardsController.getCards
+);
 
-cardsRouter.put("/:boardId", authenticate, isValidIdbyKey("boardId"), isEmptyBody(), cardsController.updateCard);
+cardsRouter.post(
+  '/:columnId',
+  authenticate,
+  isValidIdbyKey('columnId'),
+  isEmptyBody(),
+  validateBody(addCardSchema),
+  cardsController.addCard
+);
 
-cardsRouter.patch("/:boardId", authenticate, isValidIdbyKey("boardId"), isEmptyBody(), cardsController.replaceCard);
+cardsRouter.patch(
+  '/:cardId',
+  authenticate,
+  isValidIdbyKey('cardId'),
+  isEmptyBody(),
+  validateBody(updateCardSchema),
+  cardsController.updateCard
+);
 
-cardsRouter.delete("/:boardId", authenticate, isValidIdbyKey("boardId"), cardsController.deleteCard);
+cardsRouter.patch(
+  '/:cardId/move',
+  authenticate,
+  isValidIdbyKey('cardId'),
+  isEmptyBody(),
+  cardsController.moveCard
+);
+
+cardsRouter.delete(
+  '/:cardId',
+  authenticate,
+  isValidIdbyKey('cardId'),
+  cardsController.deleteCard
+);
 
 export default cardsRouter;

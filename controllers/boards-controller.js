@@ -1,145 +1,75 @@
-import Board from "../models/board.js";
-import { HttpError, filter } from "../helpers/index.js";
-import { ctrlWrapper } from "../decorators/index.js";
+import Board from '../models/board.js';
+import { HttpError } from '../helpers/index.js';
+import { ctrlWrapper } from '../decorators/index.js';
 
 const getBoards = async (req, res) => {
   const { _id: owner } = req.user;
 
-  const result = await Board.find({ owner }, "-createdAt -updatedAt");
+  const results = await Board.find({ owner }, '-createdAt -updatedAt -owner');
 
-  const shortBoards = result.map((board) => {
-    return {
-      title: board.title,
-      _id: board._id,
-      icon: board.icon,
-      owner: board.owner,
-    };
-  });
-
-  res.json(shortBoards);
+  res.json(results);
 };
 
 const getBoardById = async (req, res) => {
-  const { _id } = req.user;
   const { boardId } = req.params;
 
-  const result = await Board.findOne({ _id: boardId, owner: _id });
+  const result = await Board.findById(boardId, '-createdAt -updatedAt -owner');
 
   if (!result) {
-    throw HttpError(400, `${boardId} is not valid id`);
-  }
-
-  let filteredCards = null;
-
-  if (result.filter !== "default") {
-    filteredCards = filter(result.columns, result.filter);
-  }
-
-  res.json({ ...result._doc, columns: filteredCards ?? result.columns });
-};
-
-const addBoard = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { title, background } = req.body;
-
-  const trimedTitle = title.trim();
-
-  const board = await Board.findOne({ title: trimedTitle, owner });
-
-  if (board) {
-    throw HttpError(409, "The board whith such title already exist.");
-  }
-
-  const result = await Board.create({
-    ...req.body,
-    owner,
-    background,
-  });
-
-  res.status(201).json(result);
-};
-
-const filterBoardCards = async (req, res) => {
-  const { _id } = req.user;
-  const { boardId, priority } = req.params;
-
-  const result = await Board.findOneAndUpdate(
-    { _id: boardId, owner: _id },
-    {
-      filter: priority,
-    },
-    { new: true }
-  );
-
-  if (!result) {
-    throw HttpError(400, `${boardId} is not valid id`);
-  }
-
-  const filteredCards = filter(result.columns, priority);
-
-  res.json({ ...result._doc, columns: filteredCards });
-};
-
-const updateBoard = async (req, res) => {
-  const { _id } = req.user;
-  const { boardId } = req.params;
-  const { title, background } = req.body;
-
-  let trimedTitle = null;
-
-  if (title) {
-    trimedTitle = title.trim();
-  }
-
-  const backgroundCheck = background ? { background } : {};
-
-  const board = await Board.findOne({
-    title: trimedTitle,
-    owner: _id,
-    ...backgroundCheck,
-  });
-
-  if (board) {
-    throw HttpError(409, "The board whith such title already exist.");
-  }
-  const result = await Board.findOneAndUpdate(
-    {
-      _id: boardId,
-      owner: _id,
-    },
-    req.body,
-    { new: true, select: "-createdAt -updatedAt -columns" }
-  );
-
-  if (!result) {
-    throw HttpError(404, "Not found");
+    throw HttpError(404, `${boardId} was not found`);
   }
 
   res.json(result);
 };
 
-const deleteBoard = async (req, res) => {
+const addBoard = async (req, res) => {
   const { _id: owner } = req.user;
-  const { boardId: _id } = req.params;
+  const { title } = req.body;
 
-  const result = await Board.findOneAndDelete({
-    _id,
-    owner
+  const trimedTitle = title.trim();
+
+  const result = await Board.create({
+    ...req.body,
+    title: trimedTitle,
+    owner,
   });
+
+  res.status(201).json(result);
+};
+
+const updateBoard = async (req, res) => {
+  const { boardId } = req.params;
+  const board = await Board.findById(boardId);
+
+  if (!board) {
+    throw HttpError(404, 'The board was not found');
+  }
+
+  const title = req.body.title?.trim() || board.title;
+  const result = await Board.findByIdAndUpdate(
+    boardId,
+    { ...req.body, title },
+    { new: true, select: '-createdAt -updatedAt -owner' }
+  );
+
+  res.json(result);
+};
+
+const deleteBoard = async (req, res) => {
+  const { boardId } = req.params;
+
+  const result = await Board.findByIdAndDelete(boardId);
 
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw HttpError(404, 'The board was not found');
   }
-  res.status(200).json({
-    message: "Board has been deleted successful",
-  });
+  res.json(result);
 };
 
 export default {
-    getBoards: ctrlWrapper(getBoards),
-    getBoardById: ctrlWrapper(getBoardById),
-    addBoard: ctrlWrapper(addBoard),
-    filterBoardCards: ctrlWrapper(filterBoardCards),
-    updateBoard: ctrlWrapper(updateBoard),
-    deleteBoard: ctrlWrapper(deleteBoard),
-}
+  getBoards: ctrlWrapper(getBoards),
+  getBoardById: ctrlWrapper(getBoardById),
+  addBoard: ctrlWrapper(addBoard),
+  updateBoard: ctrlWrapper(updateBoard),
+  deleteBoard: ctrlWrapper(deleteBoard),
+};
