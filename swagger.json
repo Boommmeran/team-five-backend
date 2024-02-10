@@ -1476,9 +1476,9 @@
               "type": "string",
               "example": "icon_id"
             },
-            "owner": {
+            "background": {
               "type": "string",
-              "example": "user_id"
+              "example": "file_name"
             }
           }
         }
