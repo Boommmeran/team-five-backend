@@ -307,97 +307,6 @@
       }
     },
     "/boards": {
-      "post": {
-        "tags": ["Boards"],
-        "summary": "Add a new board",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddNewBoardRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "New board created",
-            "content": {
-              "application/json": {
-                "example": {
-                  "title": "Board title",
-                  "icon": "file_path",
-                  "background": {
-                    "min": "file_path",
-                    "desktop": "file_path",
-                    "tablet": "file_path",
-                    "mobile": "file_path"
-                  },
-                  "filter": "default",
-                  "owner": "owner_ID",
-                  "_id": "board_ID",
-                  "columns": [],
-                  "createdAt": "createdAt_Date_Time",
-                  "updatedAt": "updatedAt_Date_Time"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Unauthorized"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Title conflict",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "tags": ["Boards"],
         "summary": "Get all user's boards",
@@ -444,9 +353,67 @@
                 }
               }
             }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Boards"],
+        "summary": "Add a new board",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewBoardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New board created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddNewBoardResponse"
+                }
+              }
+            }
           },
-          "500": {
-            "description": "Internal server error",
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "some_message_goes_here"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "some_message_goes_here"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Title conflict",
             "content": {
               "application/json": {
                 "example": {
@@ -513,20 +480,10 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
           }
         }
       },
-      "put": {
+      "patch": {
         "tags": ["Boards"],
         "summary": "Update board by ID",
         "parameters": [
@@ -589,26 +546,6 @@
                 }
               }
             }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
           }
         }
       },
@@ -631,8 +568,8 @@
             "description": "Deleted successful",
             "content": {
               "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
+                "schema": {
+                  "$ref": "#/components/schemas/AddNewBoardResponse"
                 }
               }
             }
@@ -656,72 +593,49 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/boards/filter/:boardId/:priority": {
-      "patch": {
-        "tags": ["Boards"],
-        "summary": "Filter cards on the board",
+    "/columns/{boardId}": {
+      "get": {
+        "tags": ["Columns"],
+        "summary": "Get columns of the board",
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "in": "path",
             "name": "boardId",
             "required": true,
             "type": "string",
-            "description": "Board's ID"
-          },
-          {
-            "in": "path",
-            "name": "priority",
-            "required": true,
-            "type": "string",
-            "description": "Card's Priority"
+            "description": "Current board's ID"
           }
         ],
-        "security": [{ "Bearer": [] }],
         "requestBody": {},
         "responses": {
           "200": {
-            "description": "Successful response containing the filtered items",
+            "description": "Columns list of the board",
             "content": {
               "application/json": {
-                "example": {
-                  "sortedItems": [
-                    {
-                      "cardId": "item1",
-                      "priority": "high"
-                    },
-                    {
-                      "cardId": "item2",
-                      "priority": "medium"
-                    },
-                    {
-                      "cardId": "item3",
-                      "priority": "low"
-                    }
-                  ]
-                }
+                "example": [
+                  {
+                    "_id": "65c7208924b8bccf2366c56a",
+                    "title": "First column"
+                  },
+                  {
+                    "_id": "65c720b3a4fecc638ce5d272",
+                    "title": "Second column"
+                  }
+                ]
               }
             }
           },
           "400": {
-            "description": "Bad request, invalid input parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
+                "schema": {
+                  "$ref": "#/components/schemas/OtherResponse"
                 }
               }
             }
@@ -730,36 +644,14 @@
             "description": "Unauthorized",
             "content": {
               "application/json": {
-                "example": {
-                  "message": "Unauthorized"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Board not found",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "some_message_goes_here"
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/columns/{boardId}": {
+      },
       "post": {
         "tags": ["Columns"],
         "summary": "Add new column to the board",
@@ -813,82 +705,24 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": ["Columns"],
-        "summary": "Get board's columns",
-        "security": [{ "Bearer": [] }],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "boardId",
-            "required": true,
-            "type": "string",
-            "description": "Current board's ID"
-          }
-        ],
-        "requestBody": {},
-        "responses": {
-          "200": {
-            "description": "Get board by ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetColumnsByBoardIDResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/columns": {
-      "put": {
+    "/columns/{columnId}": {
+      "patch": {
         "tags": ["Columns"],
         "summary": "Update column",
         "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "type": "string",
+            "description": "Current column's ID"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -939,40 +773,29 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
           }
         }
       },
       "delete": {
         "tags": ["Columns"],
-        "summary": "Delete coolumn",
+        "summary": "Delete column",
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteColumnRequest"
-              }
-            }
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "type": "string",
+            "description": "Current column's ID"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Deleted successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
+                  "$ref": "#/components/schemas/DeleteColumnResponse"
                 }
               }
             }
@@ -996,9 +819,48 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/cards/{boardId}": {
+      "get": {
+        "tags": ["Cards"],
+        "summary": "Get all cards of the board",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "type": "string",
+            "description": "Board's ID"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "New card created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCardsOfBoardResponse"
+                }
+              }
+            }
           },
-          "500": {
-            "description": "Internal server error",
+          "400": { "description": "Bad request (invalid board id)" },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1010,17 +872,17 @@
         }
       }
     },
-    "/cards/{boardId}": {
+    "/cards/{columnId}": {
       "post": {
         "tags": ["Cards"],
         "summary": "Add new card",
         "parameters": [
           {
             "in": "path",
-            "name": "boardId",
+            "name": "columnId",
             "required": true,
             "type": "string",
-            "description": "Board's ID"
+            "description": "Column ID"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -1045,6 +907,9 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid column id"
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1054,31 +919,22 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
-          },
-          "500": { "description": "Internal server error" }
+          }
         }
-      },
-      "put": {
+      }
+    },
+    "/cards/{cardId}": {
+      "patch": {
         "tags": ["Cards"],
         "summary": "Update card",
         "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "in": "path",
-            "name": "boardId",
+            "name": "cardId",
             "required": true,
             "type": "string",
-            "description": "Board's ID"
+            "description": "Card's ID"
           }
         ],
         "requestBody": {
@@ -1120,81 +976,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": ["Cards"],
-        "summary": "Replace card",
-        "security": [{ "Bearer": [] }],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "boardId",
-            "required": true,
-            "type": "string",
-            "description": "Board's ID"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CardReplaceRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CardReplaceResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtherResponse"
-                }
-              }
-            }
           }
         }
       },
@@ -1205,28 +986,18 @@
         "parameters": [
           {
             "in": "path",
-            "name": "boardId",
+            "name": "cardId",
             "required": true,
             "type": "string",
-            "description": "Board's ID"
+            "description": "Card's ID"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteCardRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteCardResponse"
+                  "$ref": "#/components/schemas/CardUpdateResponse"
                 }
               }
             }
@@ -1250,13 +1021,61 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/cards/{cardId}/move": {
+      "patch": {
+        "tags": ["Cards"],
+        "summary": "Move card to another column",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cardId",
+            "required": true,
+            "type": "string",
+            "description": "Card's ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CardMoveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardUpdateResponse"
+                }
+              }
+            }
           },
-          "500": {
-            "description": "Internal server error",
+          "400": { "description": "Invalid column or card id" },
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OtherResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
               }
             }
@@ -1553,42 +1372,57 @@
       },
       "AddNewBoardRequest": {
         "type": "object",
-        "required": ["title", "icon", "background"],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string",
-            "example": "board_title"
+            "example": "board title"
           },
           "background": {
-            "type": "object",
-            "required": ["min", "desktop", "tablet", "mobile"],
-            "properties": {
-              "min": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "desktop": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "tablet": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "mobile": {
-                "type": "string",
-                "example": "file_name"
-              }
-            }
+            "type": "string",
+            "example": "file_name"
           },
           "icon": {
-            "type": "string"
+            "type": "string",
+            "example": "icon_id"
+          }
+        }
+      },
+      "AddNewBoardResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65c74f4d8e7d3822253b1b62"
+          },
+          "title": {
+            "type": "string",
+            "example": "board title"
+          },
+          "background": {
+            "type": "string",
+            "example": "file_name"
+          },
+          "icon": {
+            "type": "string",
+            "example": "icon_id"
+          },
+          "owner": {
+            "type": "string",
+            "example": "65c1eccce15fd71c3b8d6b07"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-02-10T10:26:21.691Z"
+          },
+          "updateddAt": {
+            "type": "string",
+            "example": "2024-02-10T10:26:21.691Z"
           }
         }
       },
       "UpdateBoardRequest": {
         "type": "object",
-        "required": ["title", "icon"],
         "properties": {
           "title": {
             "type": "string",
@@ -1596,35 +1430,17 @@
           },
           "icon": {
             "type": "string",
-            "example": "icon.png"
+            "example": "icon_id"
+          },
+          "background": {
+            "type": "string",
+            "example": "file_name"
           }
         }
       },
       "UpdateBoardResponse": {
         "type": "object",
-        "required": ["title"],
         "properties": {
-          "background": {
-            "type": "object",
-            "properties": {
-              "min": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "desktop": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "tablet": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "mobile": {
-                "type": "string",
-                "example": "file_name"
-              }
-            }
-          },
           "_id": {
             "type": "string",
             "example": "65bff3d4673bc139d3ce264a"
@@ -1633,17 +1449,13 @@
             "type": "string",
             "example": "Board name"
           },
+          "background": {
+            "type": "string",
+            "example": "file_name"
+          },
           "icon": {
             "type": "string",
-            "example": "path/icon.png"
-          },
-          "filter": {
-            "type": "string",
-            "example": "default"
-          },
-          "owner": {
-            "type": "string",
-            "example": "owner_ID"
+            "example": "icon_id"
           }
         }
       },
@@ -1662,90 +1474,33 @@
             },
             "icon": {
               "type": "string",
-              "example": "..path/picture.png"
+              "example": "icon_id"
             },
             "owner": {
               "type": "string",
-              "example": "owner_id"
+              "example": "user_id"
             }
           }
-        },
-        "example": [
-          {
-            "title": "Board title",
-            "_id": "board_id",
-            "icon": "...path/file.png",
-            "owner": "owner_id"
-          }
-        ]
+        }
       },
       "GetBoardByIDResponse": {
         "type": "object",
         "properties": {
-          "background": {
-            "type": "object",
-            "properties": {
-              "min": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "desktop": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "tablet": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "mobile": {
-                "type": "string",
-                "example": "file_name"
-              }
-            }
-          },
           "_id": {
             "type": "string",
-            "example": "board_id"
+            "example": "65c74f4d8e7d3822253b1b62"
           },
           "title": {
             "type": "string",
             "example": "Board title"
           },
+          "background": {
+            "type": "string",
+            "example": "file_name"
+          },
           "icon": {
             "type": "string",
-            "example": "file.png"
-          },
-          "filter": {
-            "type": "string",
-            "example": "default"
-          },
-          "owner": {
-            "type": "string",
-            "example": "65bfc91d89a44ee8a7ee0120"
-          },
-          "columns": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "_id": {
-                  "type": "string",
-                  "example": "65bff3d4673bc139d3ce264a"
-                },
-                "title": {
-                  "type": "string",
-                  "example": "Column title"
-                }
-              }
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "example": "2024-02-05T14:51:38.350+00:00"
-          },
-          "updatedAt": {
-            "type": "string",
-            "example": "2024-02-05T14:54:59.250+00:00"
+            "example": "icon_id"
           }
         }
       },
@@ -1763,72 +1518,25 @@
         "type": "object",
         "required": ["title"],
         "properties": {
-          "background": {
-            "type": "object",
-            "properties": {
-              "min": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "desktop": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "tablet": {
-                "type": "string",
-                "example": "file_name"
-              },
-              "mobile": {
-                "type": "string",
-                "example": "file_name"
-              }
-            }
-          },
           "_id": {
             "type": "string",
-            "example": "board_id"
+            "example": "65c7577d76c2f3c28ad3c0e7"
           },
           "title": {
             "type": "string",
             "example": "Board title"
           },
-          "icon": {
+          "board": {
             "type": "string",
-            "example": "path/icon.png"
+            "example": "65c6a54e4560c440f9499899"
           },
-          "filter": {
+          "createdAt": {
             "type": "string",
-            "example": "default"
+            "example": "2024-02-10T11:01:17.033Z"
           },
-          "owner": {
+          "updatedAt": {
             "type": "string",
-            "example": "owner_ID"
-          },
-          "columns": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "example": "Column title"
-                },
-                "owner": {
-                  "type": "string",
-                  "example": "board_id"
-                },
-                "_id": {
-                  "type": "string",
-                  "example": "column_id"
-                },
-                "cards": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
+            "example": "2024-02-10T11:01:17.033Z"
           }
         }
       },
@@ -1866,78 +1574,67 @@
       },
       "UpdateColumnRequest": {
         "type": "object",
-        "required": ["title", "owner", "_id"],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string",
-            "example": "column name"
-          },
-          "owner": {
-            "type": "string",
-            "example": "board_id"
-          },
-          "_id": {
-            "type": "string",
-            "example": "column_id"
+            "example": "New column name"
           }
         }
       },
       "UpdateColumnResponse": {
         "type": "object",
         "properties": {
-          "title": {
-            "type": "string",
-            "example": "column name"
-          },
-          "owner": {
-            "type": "string",
-            "example": "board_id"
-          },
-          "_Id": {
-            "type": "string",
-            "example": "column_id"
-          }
-        },
-        "example": {
-          "title": "In Progress",
-          "owner": "Board's_ID",
-          "_id": "Column's_ID",
-          "cards": []
-        }
-      },
-      "DeleteColumnRequest": {
-        "type": "object",
-        "required": ["title"],
-        "properties": {
-          "owner": {
-            "type": "string",
-            "example": "Current board's owner_ID"
-          },
           "_id": {
             "type": "string",
-            "example": "Current column_Id"
+            "example": "65c7577d76c2f3c28ad3c0e7"
+          },
+          "title": {
+            "type": "string",
+            "example": "New column name"
+          }
+        }
+      },
+      "DeleteColumnResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65c7577d76c2f3c28ad3c0e7"
+          },
+          "title": {
+            "type": "string",
+            "example": "Column name"
+          },
+          "board": {
+            "type": "string",
+            "example": "65c6a54e4560c440f9499899"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-02-10T11:01:17.033Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-02-10T11:11:32.457Z"
           }
         }
       },
       "AddNewCardRequest": {
         "type": "object",
-        "required": ["title", "text", "deadline", "owner", "priority"],
+        "required": ["title", "text", "deadline", "priority"],
         "properties": {
           "title": {
             "type": "string",
-            "example": "new card title"
+            "example": "New card title"
           },
           "text": {
             "type": "string",
-            "example": "description"
+            "example": "Description"
           },
           "deadline": {
             "type": "string",
-            "example": "date_deadline"
-          },
-          "owner": {
-            "type": "string",
-            "example": "owner_ID"
+            "example": "2024-02-20T00:00:00.000Z"
           },
           "priority": {
             "type": "string",
@@ -1945,66 +1642,98 @@
           }
         }
       },
+      "GetCardsOfBoardResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "65c725247abc20e9f1203be2"
+            },
+            "title": {
+              "type": "string",
+              "example": "Card title"
+            },
+            "text": {
+              "type": "string",
+              "example": "desc"
+            },
+            "priority": {
+              "type": "string",
+              "example": "low"
+            },
+            "deadline": {
+              "type": "string",
+              "example": "2024-02-10T07:09:18.165Z"
+            },
+            "column": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "65c720bca4fecc638ce5d275"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Column title"
+                }
+              }
+            }
+          }
+        }
+      },
       "AddNewCardResponse": {
         "type": "object",
         "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65c76573845e1959ec58d7e6"
+          },
           "title": {
             "type": "string",
-            "example": "new card title"
+            "example": "New card title"
           },
           "text": {
             "type": "string",
-            "example": "description"
+            "example": "Description"
           },
           "deadline": {
             "type": "string",
-            "example": "date_deadline"
-          },
-          "owner": {
-            "type": "string",
-            "example": "owner_ID"
+            "example": "2024-02-20T00:00:00.000Z"
           },
           "priority": {
             "type": "string",
-            "example": "low"
+            "example": "high"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-02-10T12:00:51.041Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-02-10T12:00:51.041Z"
           }
-        },
-        "example": {
-          "title": "Swagger documentation",
-          "text": "API endpoints.",
-          "priority": "medium",
-          "deadline": "Deadline_date",
-          "owner": "Column's_ID",
-          "_id": "Card_ID"
         }
       },
       "CardUpdateRequest": {
         "type": "object",
-        "required": ["_id", "owner"],
         "properties": {
-          "_id": {
-            "type": "string",
-            "example": "card_ID"
-          },
-          "owner": {
-            "type": "string",
-            "example": "column_ID"
-          },
           "title": {
             "type": "string",
-            "example": "new card title"
+            "example": "New card title"
           },
           "text": {
             "type": "string",
-            "example": "new card description"
+            "example": "New card description"
           },
           "priority": {
             "type": "string",
-            "example": "new_priority"
+            "example": "low"
           },
           "deadline": {
             "type": "string",
-            "example": "new_dedline"
+            "example": "2024-03-01T00:00:00.000Z"
           }
         }
       },
@@ -2013,91 +1742,47 @@
         "properties": {
           "_id": {
             "type": "string",
-            "example": "card_ID"
-          },
-          "owner": {
-            "type": "string",
-            "example": "column_ID"
+            "example": "65c76573845e1959ec58d7e6"
           },
           "title": {
             "type": "string",
-            "example": "new card title"
+            "example": "New card title"
           },
           "text": {
             "type": "string",
-            "example": "new card description"
+            "example": "New card description"
           },
           "priority": {
             "type": "string",
-            "example": "new_priority"
+            "example": "low"
           },
           "deadline": {
             "type": "string",
-            "example": "new_dedline"
-          }
-        },
-        "example": {
-          "title": "new updated card's name",
-          "text": "new updated description",
-          "priority": "new updated priority",
-          "deadline": "02/14/2024",
-          "owner": "column's_ID",
-          "_id": "card's_ID"
-        }
-      },
-      "CardReplaceRequest": {
-        "type": "object",
-        "required": ["_id", "owner", "newOwner"],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "example": "card_ID"
+            "example": "2023-03-01T00:00:00.000Z"
           },
-          "owner": {
-            "type": "string",
-            "example": "current_column_ID"
-          },
-          "newOwner": {
-            "type": "string",
-            "example": "new_column_ID"
+          "column": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "65c720bca4fecc638ce5d275"
+              },
+              "title": {
+                "type": "string",
+                "example": "Column title"
+              }
+            }
           }
         }
       },
-      "CardReplaceResponse": {
+      "CardMoveRequest": {
         "type": "object",
+        "required": ["column"],
         "properties": {
-          "title": {
+          "column": {
             "type": "string",
-            "example": "card title"
-          },
-          "text": {
-            "type": "string",
-            "example": "description"
-          },
-          "priority": {
-            "type": "string",
-            "example": "card priority"
-          },
-          "deadline": {
-            "type": "string",
-            "example": "card_deadline"
-          },
-          "owner": {
-            "type": "string",
-            "example": "new_column_owner_ID"
-          },
-          "_id": {
-            "type": "string",
-            "example": "card_ID"
+            "example": "65c720bca4fecc638ce5d275"
           }
-        },
-        "example": {
-          "title": "Just do it",
-          "text": "description",
-          "priority": "medium",
-          "deadline": "02/14/2024",
-          "owner": "65bcfd43de758e318f8a5a03",
-          "_id": "65bf89ab7ec5d2d1fa3fe1a0"
         }
       },
       "DeleteCardRequest": {
@@ -2112,12 +1797,6 @@
             "type": "string",
             "example": "column_ID"
           }
-        }
-      },
-      "DeleteCardResponse": {
-        "typ": "object",
-        "example": {
-          "message": "card deleted successfully"
         }
       },
       "UnauthorizedResponse": {

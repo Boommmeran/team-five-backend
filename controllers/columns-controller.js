@@ -1,103 +1,57 @@
-import mongoose from 'mongoose';
-import Board from "../models/board.js";
-import { HttpError } from "../helpers/index.js";
-import { ctrlWrapper } from "../decorators/index.js";
+import { HttpError } from '../helpers/index.js';
+import { ctrlWrapper } from '../decorators/index.js';
+import Column from '../models/column.js';
 
 const getColumns = async (req, res) => {
-  const { _id } = req.user;
-  const { boardId } = req.params;
+  const { boardId: board } = req.params;
 
-  const { columns } = await Board.findOne({ _id: boardId, owner: _id });
-
-  const result = columns.map((column) => ({
-    title: column.title,
-    _id: column._id,
-    owner: column.owner,
-  }));
+  const result = await Column.find({ board }, '-createdAt -updatedAt -board');
 
   res.json(result);
 };
 
-const addColumnInBoard = async (req, res) => {
-  const { _id } = req.user;
-  const { boardId } = req.params;
+const addColumn = async (req, res) => {
+  const { boardId: board } = req.params;
+  const { title } = req.body;
 
-  const newObjectId = new mongoose.Types.ObjectId();
-
-  const result = await Board.findOneAndUpdate(
-    {
-      _id: boardId,
-      owner: _id,
-    },
-    { $push: { columns: { _id: newObjectId, owner: boardId, ...req.body } } },
-    { new: true, select: "-createdAt -updatedAt" }
-  );
-
-  if (!result) {
-    throw HttpError(404, "Not found");
-  }
+  const result = await Column.create({ title: title.trim(), board });
 
   res.status(201).json(result);
 };
 
 const updateColumn = async (req, res) => {
-  const { _id } = req.user;
-  const { title, owner, _id: columnId } = req.body;
+  const { columnId } = req.params;
+  const { title } = req.body;
+  const column = await Column.findById(columnId);
 
-  const { columns } = await Board.findOne({
-    _id: owner,
-    owner: _id,
-  });
-
-  if (!columns) {
-    throw HttpError(400, `${owner} is not valid id`);
+  if (!column) {
+    throw HttpError(404, 'The column was not found');
   }
 
-  const index = columns.findIndex((column) => column.id === columnId);
-
-  if (index === -1) {
-    throw HttpError(400, `${columnId} is not valid id`);
-  }
-
-  const updateBoard = await Board.updateOne(
-    { _id: owner, owner: _id },
-    { $set: { [`columns.${index}.title`]: title } }
+  const updatedColumn = await Column.findByIdAndUpdate(
+    columnId,
+    { title: title.trim() },
+    { new: true, select: '-createdAt -updatedAt -board' }
   );
 
-  if (updateBoard.modifiedCount === 0) {
-    throw HttpError(404);
-  }
-
-  const boardGetColumn = await Board.findOne({ _id: owner, owner: _id });
-
-  res.json(boardGetColumn.columns[index]);
+  res.json(updatedColumn);
 };
 
 const deleteColumn = async (req, res) => {
-  const { _id } = req.user;
-  const { owner, _id: columnId } = req.body;
+  const { columnId } = req.params;
 
-  const result = await Board.findOneAndUpdate(
-    {
-      _id: owner,
-      owner: _id,
-    },
-    { $pull: { columns: { _id: columnId } } },
-    { new: true }
-  );
+  const result = await Column.findByIdAndDelete(columnId);
 
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw HttpError(404, 'The column was not found');
   }
 
-  res.status(200).json({
-    "message": "Column deleted saccessfully"
-  });
+  res.status(200).json(result);
 };
 
 export default {
-    getColumns: ctrlWrapper(getColumns),
-    addColumnInBoard: ctrlWrapper(addColumnInBoard),
-    updateColumn: ctrlWrapper(updateColumn),
-    deleteColumn: ctrlWrapper(deleteColumn),
-}
+  getColumns: ctrlWrapper(getColumns),
+  addColumn: ctrlWrapper(addColumn),
+  updateColumn: ctrlWrapper(updateColumn),
+  deleteColumn: ctrlWrapper(deleteColumn),
+};
