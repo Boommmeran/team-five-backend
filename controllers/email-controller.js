@@ -1,9 +1,8 @@
 import { ctrlWrapper } from '../decorators/index.js';
-import sendEmail from '../helpers/sendEmail.js';
+import { sendEmail } from '../helpers/index.js';
 
 const sendEmailToSupport = async (req, res) => {
   const { textMessage, emailForSupport } = req.body;
-
   const verifyEmail = {
     subject: 'Need Help',
     html: `<p>Email: ${emailForSupport}</p>

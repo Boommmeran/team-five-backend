@@ -4,9 +4,9 @@ export const sendEmailSchema = Joi.object({
   emailForSupport: Joi.string()
     .email()
     .required()
-    .messages({ 'string.required': 'missing required email field' }),
+    .messages({ 'string.required': 'missing required  field' }),
   textMessage: Joi.string()
-    .min(10)
+    .min(5)
     .required()
     .messages({ 'string.required': 'missing required field' }),
 });
