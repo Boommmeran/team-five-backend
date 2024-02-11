@@ -8,7 +8,6 @@ const emailRouter = express.Router();
 
 emailRouter.post(
   '/',
-  authenticate,
   isEmptyBody(),
   validateBody(sendEmailSchema),
   emailControler.sendEmailToSupport
