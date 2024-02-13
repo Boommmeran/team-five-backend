@@ -9,7 +9,7 @@
   "produses": ["application/json"],
   "servers": [
     { "url": "http://localhost:9000/api" },
-    { "url": "http://render.com/api" }
+    { "url": "https://team-five-backend-v2.onrender.com/api-docs/" }
   ],
   "tags": [
     {
