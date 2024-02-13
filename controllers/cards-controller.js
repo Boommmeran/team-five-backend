@@ -17,10 +17,14 @@ const getCards = async (req, res) => {
 const addCard = async (req, res) => {
   const { columnId: column } = req.params;
   const { title } = req.body;
-  const result = await Card.create({
+  const newCard = await Card.create({
     ...req.body,
     title: title.trim(),
     column,
+  });
+  const result = await newCard.populate({
+    path: 'column',
+    select: '-createdAt -updatedAt -board',
   });
   res.status(201).json(result);
 };
