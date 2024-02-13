@@ -1713,6 +1713,19 @@
           "updatedAt": {
             "type": "string",
             "example": "2024-02-10T12:00:51.041Z"
+          },
+          "column": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "65c720bca4fecc638ce5d275"
+              },
+              "title": {
+                "type": "string",
+                "example": "Column title"
+              }
+            }
           }
         }
       },
