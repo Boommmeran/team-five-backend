@@ -9,7 +9,6 @@ import cardsRouter from './routes/api/cards-router.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json' assert { type: 'json' };
 import emailRouter from './routes/api/emailRouter.js';
-import picturesRouter from './routes/api/pictures.js';
 
 const app = express();
 
@@ -29,7 +28,6 @@ app.use('/api/boards', boardsRouter);
 app.use('/api/columns', columnsRouter);
 app.use('/api/cards', cardsRouter);
 app.use('/api/support', emailRouter);
-app.use('/api/pictures', picturesRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
