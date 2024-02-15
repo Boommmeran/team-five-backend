@@ -76,7 +76,7 @@ export const userLoginScheme = Joi.object({
 export const userUpdateScheme = Joi.object({
   name: Joi.string(),
   email: Joi.string().email(),
-  password: Joi.string(),
+  password: Joi.any(),
 });
 
 export const updateThemeScheme = Joi.object({
