@@ -88,7 +88,6 @@ const updateAvatar = async (req, res, next) => {
   await fs.unlink(tempUpload); // видаляємо тимчасовий оригінальний файл
   await fs.unlink(optimizedFilePath); // видаляємо тимчасовий оптимізований файл
   await User.findByIdAndUpdate(_id, { avatarURL }); // обновляємо базу данних юзера
-  // public_url = http://res.cloudinary.com/dt7u6ic1c/image/upload/v1706799169/ + avatarURL
   res.json({ avatarURL });
 };
 
@@ -96,13 +95,17 @@ const updateProfile = async (req, res, next) => {
   const { _id } = req.user;
   const { name, email, password } = req.body;
 
-  const hashPassword = await bcrypt.hash(password, 10);
-  await User.findByIdAndUpdate(
+  if (password) {
+    const hashPassword = await bcrypt.hash(password, 10);
+    await User.findByIdAndUpdate(_id, { password: hashPassword });
+  }
+
+  const { name: upName, email: upEmail } = await User.findByIdAndUpdate(
     _id,
-    { name, email, password: hashPassword },
+    { name, email },
     { new: true }
   );
-  res.json({ name, email });
+  res.json({ name: upName, email: upEmail });
 };
 
 const updateTheme = async (req, res, next) => {
